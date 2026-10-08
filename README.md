@@ -1,13 +1,17 @@
 # ScribeCare — Ambient AI Clinical Scribe
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Node.js 18+](https://img.shields.io/badge/node-18+-green.svg)](https://nodejs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/React-19+-61DAFB.svg)](https://react.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4+-38B2AC.svg)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-19%2B-61DAFB.svg)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4%2B-38B2AC.svg)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**ScribeCare** securely transforms ambient doctor–patient consultations (audio or live microphone) into accurate, structured clinical SOAP notes (Chief Complaint, History of Present Illness, Assessment, and Plan).
+**ScribeCare** is an AI-powered clinical documentation assistant designed to transform doctor–patient consultations into structured clinical notes using audio transcription and clinical text processing.
+
+The goal is to reduce documentation workload and help healthcare professionals prepare organized clinical records.
+
+> **Clinical safety:** ScribeCare generates draft documentation. A qualified healthcare professional must verify and approve every note before clinical use.
 
 ---
 
@@ -15,166 +19,267 @@
 
 ```mermaid
 flowchart TD
-    subgraph Frontend["React 19 + TypeScript + Tailwind CSS (SPA)"]
-        UI[ScribeCare Web Interface]
-        REC[Audio Recorder & Waveform]
-        TR[Transcript Feed & Diarization]
-        NOTE[SOAP Note Editor & Exporter]
+    subgraph Frontend["React + TypeScript + Tailwind CSS"]
+        UI["ScribeCare Web Interface"]
+        REC["Audio Recorder"]
+        TR["Transcript Viewer"]
+        NOTE["SOAP Note Editor and Exporter"]
     end
 
-    subgraph Backend["FastAPI + Python 3.10+"]
-        API[API Router /api]
-        STT[SpeechToTextService\nWhisper Model Base]
-        NLP[ClinicalNoteService\nEntity Extraction & Negation]
-        EXP[Export Engine\nTXT, JSON, SOAP, FHIR]
-        DB[(SQLite / SQLAlchemy)]
+    subgraph Backend["FastAPI + Python"]
+        API["API Router"]
+        STT["Speech-to-Text Service"]
+        NLP["Clinical Note Processing"]
+        EXP["Export Engine"]
+        DB[("SQLite Database")]
     end
 
     UI --> REC
-    REC -->|Multipart Audio| API
+    REC -->|"Audio Upload"| API
     API --> STT
-    STT -->|Segments| TR
-    TR -->|Generate Request| API
+    STT --> TR
+    TR -->|"Generate Note Request"| API
     API --> NLP
     NLP --> NOTE
-    NOTE -->|Save / Export| EXP
+    NOTE -->|"Save and Export"| EXP
     API --> DB
 ```
 
 ---
 
-## 2. Prerequisites
+## 2. Key Features
 
-1. **Python:** 3.10 or higher (tested on Python 3.14)
-2. **Node.js:** 18.x or higher (tested on Node v24)
-3. **FFmpeg:** Required by OpenAI Whisper for live audio decoding.
-   - **Windows:** Run `winget install Gyan.FFmpeg` or extract binaries from [gyan.dev/ffmpeg/builds](https://www.gyan.dev/ffmpeg/builds/) and add `bin/` to system `PATH`.
-   - **macOS:** Run `brew install ffmpeg`
-   - **Ubuntu/Debian:** Run `sudo apt update && sudo apt install -y ffmpeg`
-   *(Note: You can run and test the full application without FFmpeg by enabling **Mock Mode**).*
+* Audio transcription for supported consultation recordings.
+* Structured SOAP clinical note generation.
+* Transcript review before using generated notes.
+* Clinical note editing, saving, and retrieval.
+* Export options for supported formats.
+* Demo patient records for development and demonstrations.
+* Mock mode for testing frontend workflows.
+* Interactive API documentation through FastAPI.
+* Intended multilingual workflow for English, Hindi, and Telugu, subject to the capabilities implemented and tested in the application.
 
 ---
 
-## 3. Quick Start (Development Mode)
+## 3. Prerequisites
 
-### Step 1: Install Python Dependencies & Seed Database
+Install the following tools:
+
+* **Python:** 3.10 or later
+* **Node.js:** 18 or later
+* **npm:** Included with Node.js
+* **FFmpeg:** Required for supported audio-processing workflows using Whisper
+
+### Install FFmpeg
+
+**Windows**
+
+```powershell
+winget install Gyan.FFmpeg
+```
+
+**macOS**
+
 ```bash
-# Install backend dependencies
-pip install -r requirements.txt
+brew install ffmpeg
+```
 
-# Seed SQLite database with demo patients
+**Ubuntu/Debian**
+
+```bash
+sudo apt update
+sudo apt install -y ffmpeg
+```
+
+Ensure FFmpeg is available on your system `PATH` after installation.
+
+---
+
+## 4. Quick Start — Development Mode
+
+### Step 1: Install Python dependencies
+
+Run these commands from the project root:
+
+```bash
+pip install -r requirements.txt
+```
+
+If the repository includes the demo database seed module, run:
+
+```bash
 python -m backend.seed
 ```
 
-### Step 2: Install Frontend Dependencies
+### Step 2: Install frontend dependencies
+
 ```bash
 cd frontend
 npm install
 cd ..
 ```
 
-### Step 3: Run Development Servers
-Open two terminal windows:
+### Step 3: Start the backend
 
-**Terminal 1 (Backend API on port 8000):**
+From the project root, run:
+
 ```bash
 uvicorn backend.main:app --reload --port 8000
 ```
 
-**Terminal 2 (Frontend Vite Dev Server on port 5173):**
+Backend URLs:
+
+* **API:** `http://localhost:8000`
+* **API documentation:** `http://localhost:8000/docs`
+* **Health check:** `http://localhost:8000/api/health`
+
+### Step 4: Start the frontend
+
+Open a second terminal:
+
 ```bash
 cd frontend
 npm run dev
 ```
 
-Visit **`http://localhost:5173`** in your browser.  
-Interactive API documentation is accessible at **`http://localhost:8000/docs`**.
+Open the local URL printed by Vite, typically:
+
+`http://localhost:5173`
+
+Keep both servers running while testing the application.
 
 ---
 
-## 4. Production Build & Unified Server
+## 5. Production Build
 
-To build the optimized React frontend and serve both the SPA and REST API from a single FastAPI process:
+Build the React frontend:
 
 ```bash
-# 1. Build the production React frontend
 cd frontend
+npm install
 npm run build
 cd ..
+```
 
-# 2. Run the production Uvicorn server
+If FastAPI is configured to serve the built frontend, start the backend using:
+
+```bash
 uvicorn backend.main:app --host 0.0.0.0 --port 8000
 ```
 
-Visit **`http://localhost:8000`** in your browser.
+The frontend can be served by the same process only when the backend's static-file configuration supports it.
 
 ---
 
-## 5. Zero-Dependency Mock Mode
+## 6. Mock Mode
 
-To run and evaluate the complete ScribeCare experience without needing GPU hardware, Whisper model downloads, or system FFmpeg:
+Mock mode allows you to explore supported frontend workflows without running the real speech recognition pipeline.
 
-1. Create a `frontend/.env.local` file:
-   ```env
-   VITE_USE_MOCK=true
-   ```
-2. Start the frontend:
-   ```bash
-   cd frontend && npm run dev
-   ```
-With `VITE_USE_MOCK=true`, the interface simulates real-time microphone capture, loads clinical regression transcripts, synthesizes structured SOAP notes, and tests approval and export flows seamlessly.
+Create `frontend/.env.local` with:
 
----
+```env
+VITE_USE_MOCK=true
+```
 
-## 6. Environment Variables (`.env.example`)
+Start the frontend:
 
-| Variable | Default | Description |
-|---|---|---|
-| `DATABASE_URL` | `sqlite:///./scribecare.db` | SQLAlchemy SQLite database path |
-| `WHISPER_MODEL` | `base` | Whisper model tier (`tiny`, `base`, `small`, `medium`) |
-| `PORT` | `8000` | Port for the FastAPI server |
-| `HOST` | `127.0.0.1` | Host binding interface |
-| `VITE_USE_MOCK` | `false` | Enables client-side mock data mode in the frontend |
+```bash
+cd frontend
+npm run dev
+```
+
+Mock mode simulates only the workflows implemented in the frontend. It does not demonstrate real audio transcription or clinical inference.
 
 ---
 
-## 7. API Summary
+## 7. Environment Variables
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/health` | Returns health status, Whisper model state, and FFmpeg detection. |
-| `GET` | `/api/patients` | Returns registered clinic demo patients. |
-| `POST` | `/api/transcribe` | Transcribes multipart audio into speaker-attributed segments. |
-| `POST` | `/api/notes/generate` | Synthesizes structured clinical SOAP notes with negation extraction. |
-| `GET` | `/api/notes` | Lists saved clinical notes. |
-| `GET` | `/api/notes/{id}` | Retrieves a single clinical note by ID. |
-| `PUT` | `/api/notes/{id}` | Updates note sections (inline edits) and approves note (`draft` $\rightarrow$ `reviewed`). |
-| `POST` | `/api/notes/{id}/export` | Exports note in `txt`, `json`, `soap`, or `fhir` (501 status) format. |
-| `POST` | `/api/demo-requests` | Validates and stores commercial enterprise demo inquiries. |
+The application may use the following environment variables, depending on its configuration.
+
+| Variable        | Example/default             | Description                   |
+| --------------- | --------------------------- | ----------------------------- |
+| `DATABASE_URL`  | `sqlite:///./scribecare.db` | Database connection string    |
+| `WHISPER_MODEL` | `base`                      | Speech recognition model size |
+| `PORT`          | `8000`                      | Backend listening port        |
+| `HOST`          | `127.0.0.1`                 | Backend bind address          |
+| `VITE_USE_MOCK` | `false`                     | Enables frontend mock mode    |
+
+Configure environment variables through a local `.env` file or your hosting provider's settings, as appropriate.
+
+**Never commit credentials, API keys, or identifiable patient information to GitHub.**
 
 ---
 
-## 8. Automated Testing
+## 8. API Overview
 
-### Run Backend Pytest Suite
+Verify these routes against the running backend at `/docs`.
+
+| Method | Endpoint                 | Description                                  |
+| ------ | ------------------------ | -------------------------------------------- |
+| `GET`  | `/api/health`            | Checks backend health and audio dependencies |
+| `GET`  | `/api/patients`          | Retrieves demo patient records               |
+| `POST` | `/api/transcribe`        | Submits audio for transcription              |
+| `POST` | `/api/notes/generate`    | Generates a clinical note                    |
+| `GET`  | `/api/notes`             | Lists saved clinical notes                   |
+| `GET`  | `/api/notes/{id}`        | Retrieves a clinical note by ID              |
+| `PUT`  | `/api/notes/{id}`        | Updates a saved clinical note                |
+| `POST` | `/api/notes/{id}/export` | Exports a note in a supported format         |
+| `POST` | `/api/demo-requests`     | Submits an enterprise demo inquiry           |
+
+The actual endpoints and supported export formats depend on the implementation in the repository.
+
+---
+
+## 9. Testing
+
+### Backend tests
+
+From the project root:
+
 ```bash
 python -m pytest tests/ -v
 ```
-*Tests verify API health, FFmpeg error propagation, Whisper transcription mocking, regression fixtures (duration extraction and NegEx negation), note CRUD, multi-format export, and demo request validation.*
 
-### Run Frontend Vitest Suite
+### Frontend tests
+
 ```bash
 cd frontend
 npm test
 ```
-*Tests verify language switcher reactivity (`en`/`hi`/`te`), inline note editing, approval toggle, export menu interactions, and modal validation.*
+
+These commands run the tests included in the repository. Check the test output to confirm which tests pass or fail.
 
 ---
 
-## 9. Regulatory & Clinical Safety Notice
+## 10. Clinical Safety and Privacy
 
-> [!IMPORTANT]
-> **Clinical Review Mandate:** ScribeCare generates draft documentation. All clinical notes must be reviewed, verified, and signed by a licensed medical provider before becoming part of the permanent medical record.
+> **Clinical review required:** ScribeCare produces draft clinical documentation. A qualified healthcare professional must review the transcript, verify all relevant facts, correct errors, and approve the note before clinical use.
 
-> [!NOTE]
-> **HIPAA-Ready Architecture:** ScribeCare is built with HIPAA readiness in mind (local on-premise execution capability, zero logging of raw transcripts or PHI to standard output, isolated database storage). Complete HIPAA compliance requires organizational business associate agreements (BAAs), access controls, and encryption at rest in your hosting infrastructure.
+### Important considerations
+
+* Speech recognition can misinterpret medical terminology, names, numbers, and medications.
+* Generated notes can omit, misinterpret, or incorrectly organize information.
+* AI-generated assessments and plans must not replace professional clinical judgment.
+* Use fictional or properly authorized data during development and demonstrations.
+* Do not upload identifiable patient recordings or medical records to public repositories or unapproved hosting services.
+* Authentication, encryption, multilingual support, and FHIR export should only be described as production-ready after they have been implemented and tested.
+
+A privacy-conscious architecture alone does not establish HIPAA compliance. Compliance depends on the complete system, organizational procedures, security controls, agreements, and hosting arrangements.
+
+---
+
+## 11. Contributing
+
+Contributions and suggestions are welcome.
+
+1. Create a feature branch.
+2. Make your changes.
+3. Test your changes.
+4. Commit using a descriptive message.
+5. Open a pull request for review.
+
+---
+
+## 12. License
+
+This project uses the MIT License only if the repository's `LICENSE` file contains the MIT License text.
