@@ -1,77 +1,128 @@
+
 import re
 
 
-def clean_transcript(transcript):
-    if not transcript:
+# =========================================================
+# CLEAN TRANSCRIPT
+# =========================================================
+
+def clean_transcript(text):
+    """
+    Clean speech-to-text output while preserving
+    English, Hindi, and Telugu content.
+    """
+
+    if not text:
         return ""
 
-    transcript = transcript.strip()
+    cleaned = text.strip()
 
-    # Remove filler words
-    filler_words = [
+    # Common English speech fillers
+    english_fillers = [
         r"\bumm+\b",
         r"\buh+\b",
         r"\bah+\b",
         r"\byou know\b",
-        r"\bactually\b"
+        r"\bactually\b",
     ]
 
-    for word in filler_words:
-        transcript = re.sub(
-            word,
+    for pattern in english_fillers:
+        cleaned = re.sub(
+            pattern,
             "",
-            transcript,
+            cleaned,
             flags=re.IGNORECASE
         )
 
-    # Remove extra spaces
-    transcript = re.sub(r"\s+", " ", transcript)
-
     # Remove spaces before punctuation
-    transcript = re.sub(r"\s+([,.!?])", r"\1", transcript)
+    cleaned = re.sub(
+        r"\s+([,.!?;:])",
+        r"\1",
+        cleaned
+    )
 
-    # Remove punctuation left alone after filler-word removal
-    transcript = re.sub(r"([.!?])\s*,", r"\1", transcript)
-    transcript = re.sub(r",\s*([.!?])", r"\1", transcript)
-
-    # Remove unnecessary commas after sentence starts
-    transcript = re.sub(
-        r"(^|[.!?])\s*,\s*",
+    # Remove punctuation left at the beginning of a sentence
+    cleaned = re.sub(
+        r"([.!?])\s*[,;:]+\s*",
         r"\1 ",
-        transcript
+        cleaned
     )
 
-    # Clean spaces again
-    transcript = re.sub(r"\s+", " ", transcript)
-
-    return transcript.strip()
-
-
-def detect_language(transcript):
-    telugu_count = len(
-        re.findall(r"[\u0C00-\u0C7F]", transcript)
+    # Remove repeated punctuation
+    cleaned = re.sub(
+        r"([,.!?])\1+",
+        r"\1",
+        cleaned
     )
 
-    hindi_count = len(
-        re.findall(r"[\u0900-\u097F]", transcript)
+    # Remove unnecessary spaces
+    cleaned = re.sub(
+        r"\s+",
+        " ",
+        cleaned
     )
 
-    if telugu_count > 0:
+    return cleaned.strip()
+
+
+# =========================================================
+# LANGUAGE DETECTION
+# =========================================================
+
+def detect_language(text):
+    """
+    Detect English, Hindi, or Telugu.
+    """
+
+    if not text:
+        return "English"
+
+    telugu_chars = re.findall(
+        r"[\u0C00-\u0C7F]",
+        text
+    )
+
+    hindi_chars = re.findall(
+        r"[\u0900-\u097F]",
+        text
+    )
+
+    english_chars = re.findall(
+        r"[A-Za-z]",
+        text
+    )
+
+    if (
+        len(telugu_chars) > len(hindi_chars)
+        and len(telugu_chars) > 0
+    ):
         return "Telugu"
 
-    if hindi_count > 0:
+    if len(hindi_chars) > 0:
         return "Hindi"
+
+    if len(english_chars) > 0:
+        return "English"
 
     return "English"
 
 
-def split_into_sentences(transcript):
-    if not transcript:
+# =========================================================
+# SENTENCE SPLITTING
+# =========================================================
+
+def split_into_sentences(text):
+    """
+    Split transcript into individual sentences.
+    Supports English, Hindi, and Telugu punctuation.
+    """
+
+    if not text or not text.strip():
         return []
 
     sentences = re.split(
-        r"(?<=[.!?])\s+",
-        transcript
+        r"(?<=[.!?।])\s+",
+        text.strip()
     )
 
     return [
@@ -81,18 +132,24 @@ def split_into_sentences(transcript):
     ]
 
 
-def organize_conversation(transcript):
-    if not transcript:
-        return []
+# =========================================================
+# ORGANIZE CONVERSATION
+# =========================================================
 
-    sentences = split_into_sentences(transcript)
+def organize_conversation(text):
+    """
+    Organize transcript into conversation entries.
+    """
 
-    organized = []
+    sentences = split_into_sentences(text)
+
+    conversation = []
 
     for sentence in sentences:
-        organized.append({
+
+        conversation.append({
             "text": sentence,
             "type": "conversation"
         })
 
-    return organized
+    return conversation

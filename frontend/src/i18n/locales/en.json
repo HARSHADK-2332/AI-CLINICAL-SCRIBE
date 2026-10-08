@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "product": "Product",
+    "solutions": "Solutions",
+    "security": "Security",
+    "resources": "Resources",
+    "signIn": "Sign in",
+    "requestDemo": "Request a demo",
+    "openApp": "Open ScribeCare"
+  },
+  "hero": {
+    "eyebrow": "AI CLINICAL SCRIBE",
+    "titleLine1": "Clinical notes,",
+    "titleLine2": "without the paperwork.",
+    "subtitle": "ScribeCare securely turns clinician-patient conversations into accurate, structured clinical notes — so you can focus on what matters most: your patients.",
+    "requestDemoCta": "Request a demo →",
+    "seeHowItWorks": "See how it works ▶",
+    "availableIn": "Available in"
+  },
+  "trust": {
+    "heading": "Built for modern care teams",
+    "item1Title": "HIPAA-ready architecture",
+    "item1Desc": "Your data, your patients, our priority.",
+    "item2Title": "Role-based access",
+    "item2Desc": "Right people. Right access. Always.",
+    "item3Title": "Audit trails",
+    "item3Desc": "Full visibility and compliance support.",
+    "item4Title": "Multilingual workflows",
+    "item4Desc": "English, हिंदी, తెలుగు — More languages coming soon."
+  },
+  "features": {
+    "feature1Title": "Ambient documentation",
+    "feature1Desc": "Capture the full conversation naturally, while ScribeCare listens and understands in real time.",
+    "feature2Title": "Structured notes",
+    "feature2Desc": "Get clear, accurate, and customizable clinical notes — ready to review, edit, and share.",
+    "feature3Title": "Enterprise security",
+    "feature3Desc": "Built with healthcare-grade security, compliance, and control — so your data stays protected.",
+    "learnMore": "Learn more →"
+  },
+  "footer": {
+    "disclaimer": "ScribeCare generates draft documentation that must be reviewed and signed by a licensed clinician.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "compliance": "Compliance & Security",
+    "rights": "All rights reserved."
+  },
+  "demoModal": {
+    "title": "Request a ScribeCare Demo",
+    "subtitle": "See how ambient documentation saves 2+ hours per clinic day.",
+    "name": "Full Name",
+    "namePlaceholder": "Dr. Sarah Jenkins",
+    "email": "Work Email",
+    "emailPlaceholder": "s.jenkins@healthsystem.org",
+    "organization": "Healthcare Organization",
+    "organizationPlaceholder": "Valley Regional Medical Center",
+    "role": "Clinical / Administrative Role",
+    "rolePlaceholder": "Lead Physician / CMIO",
+    "message": "Message / Notes (optional)",
+    "messagePlaceholder": "Tell us about your clinic specialty and EHR setup...",
+    "submit": "Submit Request",
+    "submitting": "Submitting...",
+    "successTitle": "Demo Requested!",
+    "successMessage": "Thank you. A ScribeCare clinical integration specialist will contact you within 24 hours.",
+    "close": "Close"
+  },
+  "app": {
+    "clinician": "Dr. Johnson",
+    "specialty": "General Medicine",
+    "newConsultation": "New Consultation",
+    "patients": "Patients",
+    "notes": "Notes",
+    "history": "History",
+    "settings": "Settings",
+    "patientLabel": "Patient",
+    "inConsultation": "In consultation",
+    "sessionTime": "Session · 10:24 AM",
+    "liveConversation": "Live Conversation",
+    "recorder": {
+      "listening": "Listening…",
+      "paused": "Paused",
+      "stopped": "Recording Stopped",
+      "startRecording": "Start Recording",
+      "pause": "Pause",
+      "resume": "Resume",
+      "stop": "Stop & Transcribe",
+      "uploadAudio": "Upload audio file",
+      "generateNote": "Generate Clinical Note",
+      "generating": "Analyzing conversation…"
+    },
+    "note": {
+      "draftReady": "Draft ready",
+      "reviewed": "Reviewed & Approved",
+      "reviewNotice": "Draft — requires clinician review",
+      "languageNotice": "Note generated in English (Multilingual synthesis active)",
+      "chiefComplaint": "Chief Complaint",
+      "hpi": "History of Present Illness",
+      "assessment": "Assessment",
+      "plan": "Plan",
+      "pertinentNegatives": "Pertinent Negatives",
+      "allergies": "Allergies",
+      "medications": "Medications",
+      "edit": "Edit",
+      "done": "Done",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "export": "Export",
+      "approveSign": "Approve & Sign",
+      "approved": "Approved ✓"
+    }
+  }
+}
