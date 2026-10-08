@@ -4,7 +4,12 @@ from typing import Any, Dict, Optional
 
 import requests
 import streamlit as st
+import os
 
+API_URL = st.secrets.get(
+    "API_URL",
+    os.getenv("API_URL", "http://127.0.0.1:8001")
+).rstrip("/")
 
 # ============================================================
 # PAGE CONFIGURATION
@@ -54,8 +59,7 @@ if "note_id" not in st.session_state:
     st.session_state.note_id = None
 
 if "backend_url" not in st.session_state:
-    st.session_state.backend_url = "http://127.0.0.1:8000"
-
+    st.session_state.backend_url = API_URL
 if "backend_status" not in st.session_state:
     st.session_state.backend_status = None
 
